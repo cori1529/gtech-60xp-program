@@ -1,0 +1,195 @@
+					 /*
+	matrix.c
+
+*/
+
+ #include "stm32f10x_type.h"
+#include "stm32f10x_gpio.h"
+
+#include "adc.h"
+#include "buzzer.h"
+#include "dac.h"
+#include "delay.h"
+#include "func.h"
+#include "key.h"
+#include "lcd.h"
+#include "relay.h"
+#include "set.h"
+#include "usart.h"
+#include "var.h"
+#include "stdio.h"
+#include "matrix.h"
+
+
+ char a1b1_input=0;	 // 1행1열 
+ char a1b2_input=0;
+ char a1b3_input=0;
+ char a1b4_input=0;
+ char a1b5_input=0;	// 1행 5열 
+
+ char a2b1_input=0;	 // 2행1열 
+ char a2b2_input=0;
+ char a2b3_input=0;
+ char a2b4_input=0;
+ char a2b5_input=0;	// 2행 5열 
+ 
+ char a3b1_input=0;	 // 3행1열 
+ char a3b2_input=0;
+ char a3b3_input=0;
+ char a3b4_input=0;
+ char a3b5_input=0;	// 3행 5열 
+ 
+ char a4b1_input=0;	 // 4행1열 
+ char a4b2_input=0;
+ char a4b3_input=0;
+ char a4b4_input=0;
+ char a4b5_input=0;	// 4행 5열 
+
+ char a5b1_input;	 // 5행1열 
+ char a5b2_input;
+ char a5b3_input;
+ char a5b4_input;
+ char a5b5_input;	// 5행 5열 
+
+void matrix_input_test()
+{
+	
+	char exit_flag = 0;
+	char result[5];	      // 위 3줄
+    char result_lower[5]; // 아래 2줄 
+
+    All_signal_Off();
+	result[0]=0;
+    result[1]=0;
+	result[2]=0;
+	result[3]=0;
+	result[4]=0;
+
+	vputs("TEST5");
+	Delay_ms(2000);
+	vputs("     ");
+	Display_buffer[0]=0;
+
+    //    AAAA
+	//	 F	  B
+	//	 F	  B
+	//	   GGG
+	//	 E	  C
+	//	 E	  C
+	//	  DDD
+	do
+	{
+		 /******************a1행 *******************************/
+      	  if(GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_6) == 0x00) // a1b1 입력 on 
+		     { if(!a1b1_input){ a1b1_input=1; Display_buffer[0]+=SEGMENT_D ;}}
+		  else { if(a1b1_input) {a1b1_input=0; Display_buffer[0]-=SEGMENT_D;}}
+ 	      if(GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_7) == 0x00) // a1b2 입력 on 
+		     { if(!a1b2_input){ a1b2_input=1; Display_buffer[1]+=SEGMENT_D ;}}
+		  else { if(a1b2_input) {a1b2_input=0; Display_buffer[1]-=SEGMENT_D;}}
+  		 if(GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_8) == 0x00) // a1b3 입력 on 
+		     { if(!a1b3_input){ a1b3_input=1; Display_buffer[2]+=SEGMENT_D ;}}
+		  else { if(a1b3_input) {a1b3_input=0; Display_buffer[2]-=SEGMENT_D;}}
+         if(GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_9) == 0x00) // a1b4 입력 on 
+		     { if(!a1b4_input){ a1b4_input=1; Display_buffer[3]+=SEGMENT_D ;}}
+		  else{ if(a1b4_input) {a1b4_input=0; Display_buffer[3]-=SEGMENT_D;}}
+         if(GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_10) == 0x00) // a1b5 입력 on 
+		     { if(!a1b5_input){ a1b5_input=1; Display_buffer[4]+=SEGMENT_D ;}}
+		  else{ if(a1b5_input) {a1b5_input=0; Display_buffer[4]-=SEGMENT_D;}}
+         /******************a1행 *******************************/
+    
+	     /******************a2행 *******************************/
+      	  if(GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_11) == 0x00) // a2b1 입력 on 
+		     { if(!a2b1_input){ a2b1_input=1; Display_buffer[0]+=SEGMENT_C ;}}
+		  else { if(a2b1_input) {a2b1_input=0; Display_buffer[0]-=SEGMENT_C;}}
+ 	      if(GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_12) == 0x00) // a2b2 입력 on 
+		     { if(!a2b2_input){ a2b2_input=1; Display_buffer[1]+=SEGMENT_C ;}}
+		  else { if(a2b2_input) {a2b2_input=0; Display_buffer[1]-=SEGMENT_C;}}
+  		 if(GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_13) == 0x00) // a2b3 입력 on 
+		     { if(!a2b3_input){ a2b3_input=1; Display_buffer[2]+=SEGMENT_C ;}}
+		  else { if(a2b3_input) {a2b3_input=0; Display_buffer[2]-=SEGMENT_C;}}
+         if(GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_14) == 0x00) // a2b4 입력 on 
+		     { if(!a2b4_input){ a2b4_input=1; Display_buffer[3]+=SEGMENT_C ;}}
+		  else{ if(a2b4_input) {a2b4_input=0; Display_buffer[3]-=SEGMENT_C;}}
+         if(GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_15) == 0x00) // a2b5 입력 on 
+		     { if(!a2b5_input){ a2b5_input=1; Display_buffer[4]+=SEGMENT_C ;}}
+		  else{ if(a2b5_input) {a2b5_input=0; Display_buffer[4]-=SEGMENT_C;}}
+         /******************a2행 *******************************/
+      	// #ifdef dpfpd 
+		 /******************a3행 *******************************/
+      	  if(GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_0) == 0x00) // a3b1 입력 on 
+		     { if(!a3b1_input){ a3b1_input=1; Display_buffer[0]+=SEGMENT_G ;}}
+		  else { if(a3b1_input) {a3b1_input=0; Display_buffer[0]-=SEGMENT_G;}}
+ 	      if(GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_1) == 0x00) // a3b2 입력 on 
+		     { if(!a3b2_input){ a3b2_input=1; Display_buffer[1]+=SEGMENT_G ;}}
+		  else { if(a3b2_input) {a3b2_input=0; Display_buffer[1]-=SEGMENT_G;}}
+  		 if(GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_2) == 0x00) // a3b3 입력 on 
+		     { if(!a3b3_input){ a3b3_input=1; Display_buffer[2]+=SEGMENT_G ;}}
+		  else { if(a3b3_input) {a3b3_input=0; Display_buffer[2]-=SEGMENT_G;}}
+         if(GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_3) == 0x00) // a3b4 입력 on 
+		     { if(!a3b4_input){ a3b4_input=1; Display_buffer[3]+=SEGMENT_G ;}}
+		  else{ if(a3b4_input) {a3b4_input=0; Display_buffer[3]-=SEGMENT_G;}}
+         if(GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_4) == 0x00) // a3b5 입력 on 
+		     { if(!a3b5_input){ a3b5_input=1; Display_buffer[4]+=SEGMENT_G ;}}
+		  else{ if(a3b5_input) {a3b5_input=0; Display_buffer[4]-=SEGMENT_G;}}
+         /******************a3행 *******************************/
+      	
+		 /******************a4행 *******************************/
+		 if(GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_5) == 0x00) // a4b1 입력 on 
+		     { if(!a4b1_input){ a4b1_input=1; Display_buffer[0]+=SEGMENT_B ;}}
+		  else { if(a4b1_input) {a4b1_input=0; Display_buffer[0]-=SEGMENT_B;}}
+ 	      if(GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_6) == 0x00) // a4b2 입력 on 
+		     { if(!a4b2_input){ a4b2_input=1; Display_buffer[1]+=SEGMENT_B ;}}
+		  else { if(a4b2_input) {a4b2_input=0; Display_buffer[1]-=SEGMENT_B;}}
+  		 if(GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_7) == 0x00) // a4b3 입력 on 
+		     { if(!a4b3_input){ a4b3_input=1; Display_buffer[2]+=SEGMENT_B ;}}
+		  else { if(a4b3_input) {a4b3_input=0; Display_buffer[2]-=SEGMENT_B;}}
+         if(GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_8) == 0x00) // a4b4 입력 on 
+		     { if(!a4b4_input){ a4b4_input=1; Display_buffer[3]+=SEGMENT_B ;}}
+		  else{ if(a4b4_input) {a4b4_input=0; Display_buffer[3]-=SEGMENT_B;}}
+         if(GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_9) == 0x00) // a4b5 입력 on 
+		     { if(!a4b5_input){ a4b5_input=1; Display_buffer[4]+=SEGMENT_B ;}}
+		  else{ if(a4b5_input) {a4b5_input=0; Display_buffer[4]-=SEGMENT_B;}}
+      	  
+         /******************a4행 *******************************/
+      	
+		 /******************a5행 *******************************/
+      	 if(GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_10) == 0x00) // a5b1 입력 on 
+		     { if(!a5b1_input){ a5b1_input=1; Display_buffer[0]+=SEGMENT_A ;}}
+		  else { if(a5b1_input) {a5b1_input=0; Display_buffer[0]-=SEGMENT_A;}}
+ 	      
+		
+		  if(GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_11) == 0x00) // a5b2 입력 on 
+		     { if(!a5b2_input){ a5b2_input=1; Display_buffer[1]+=SEGMENT_A ;}}
+		  else { if(a5b2_input) {a5b2_input=0; Display_buffer[1]-=SEGMENT_A;}}
+  		 
+		
+		
+		
+		 if(GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_12) == 0x00) // a5b3 입력 on 
+		     { if(!a5b3_input){ a5b3_input=1; Display_buffer[3]+=SEGMENT_A ;}}
+		  else { if(a5b3_input) {a5b3_input=0; Display_buffer[3]-=SEGMENT_A;}}
+          
+		 if(GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_13) == 0x00) // a5b4 입력 on 
+		     { if(!a5b4_input){ a5b4_input=1; Display_buffer[4]+=SEGMENT_A ;}}
+		  else{ if(a5b4_input) {a5b4_input=0; Display_buffer[4]-=SEGMENT_A;}}
+        /* 
+		 if(GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_14) == 0x00) // a5b5 입력 on 
+		     { if(!a5b5_input){ a5b5_input=1; Display_buffer[4]+=SEGMENT_A ;}}
+		  else{ if(a5b5_input) {a5b5_input=0; Display_buffer[4]-=SEGMENT_A;}}
+      	 */
+		 
+		 /******************a5행 *******************************/
+      	      	
+		
+
+		
+ 
+	  	
+
+
+	} while(!exit_flag);
+}
+
+
+ 
+/* end of file */
